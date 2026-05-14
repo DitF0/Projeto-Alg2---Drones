@@ -23,11 +23,11 @@ Foram implementadas e comparadas duas abordagens algorítmicas:
 
 ```
 📁 projeto-drones-alg2/
-├── projeto_drones.cpp   → Código-fonte principal em C++
-├── entregas.csv         → Dados de entregas para teste via arquivo
-├── Relatório_Técnico_Individual.md  → Relatório do projeto
-├── Roteiro_e_Guia_para_Apresentação.md → Roteiro da apresentação
-└── README.md            → Este arquivo
+├── projeto_drones.cpp                  → Código-fonte principal em C++
+├── entregas.csv                        → 20 entregas para teste via arquivo
+├── Relatorio_Tecnico_Individual.md     → Relatório do projeto
+├── Roteiro_e_Guia_para_Apresentacao.md → Roteiro da apresentação
+└── README.md                           → Este arquivo
 ```
 
 ---
@@ -51,6 +51,8 @@ g++ -std=c++11 -o projeto_drones projeto_drones.cpp
 ```
 > No Windows: `projeto_drones.exe`
 
+> ⚠️ O arquivo `entregas.csv` deve estar na **mesma pasta** do executável.
+
 ---
 
 ## 🖥️ Menu do Sistema
@@ -73,13 +75,17 @@ Ao executar, o programa exibe um menu interativo:
 
 ## 🚀 Casos de Teste
 
-| Opção | Descrição |
-|---|---|
-| CSV | Carrega entregas do arquivo `entregas.csv` |
-| Teste 1 | 5 entregas equilibradas — cenário padrão |
-| Teste 2 | 6 entregas em alta demanda — concorrência por recursos |
-| Teste 3 | Todos os pacotes excedem os limites — nenhuma solução viável |
-| Teste 4 | Mix com uma entrega individualmente inviável — testa o filtro |
+| Opção | Descrição | Entregas |
+|---|---|---|
+| CSV | Carrega do arquivo `entregas.csv` | 20 entregas variadas |
+| Teste 1 | Cenário equilibrado | 5 entregas |
+| Teste 2 | Alta demanda, concorrência por recursos | 6 entregas |
+| Teste 3 | Todos os pacotes excedem os limites | 2 entregas inviáveis |
+| Teste 4 | Mix com uma entrega individualmente inviável | 5 entregas (1 filtrada) |
+
+O caso via **CSV é o mais completo e interessante**: com 20 entregas disponíveis
+e o drone podendo levar no máximo 4, há uma grande quantidade de combinações
+possíveis — o que evidencia bem a diferença entre o Guloso e o Backtracking.
 
 ---
 
@@ -101,16 +107,17 @@ Ao executar, o programa exibe um menu interativo:
 --------------------------------------------------------------------------------
    ID    Peso(kg)      Prior.      Recompensa     Bateria       Tempo       Dist.
 --------------------------------------------------------------------------------
+    7        1.00           2           60.00       10.00       15.00        3.00
+   13        1.00           1           55.00        8.00       12.00        2.50
+   20        1.00           1           50.00        9.00       14.00        2.00
     3        1.50           1           80.00       15.00       25.00        4.00
-    5        2.50           2          120.00       30.00       40.00        7.00
-    1        2.00           1          100.00       20.00       30.00        5.00
 --------------------------------------------------------------------------------
-Entregas atendidas: 3
-Peso total:         6.00 / 10.00 kg
-Bateria total:      65.00 / 100.00 %
-Tempo total:        95.00 / 120.00 min
-Recompensa total:   300.00
-Tempo de execucao:  0.0120 ms
+Entregas atendidas: 4
+Peso total:         4.50 / 10.00 kg
+Bateria total:      42.00 / 100.00 %
+Tempo total:        66.00 / 120.00 min
+Recompensa total:   245.00
+Tempo de execucao:  0.0180 ms
 ```
 
 ---
@@ -123,17 +130,28 @@ na ordem até não caber mais. Rápido, mas não garante a solução ótima.
 
 ### Backtracking
 Explora todas as combinações possíveis de entregas com retrocesso, garantindo
-a **solução ótima**. Custo computacional cresce exponencialmente com o número
-de entregas.
+a **solução ótima**. Com 20 entregas disponíveis e as podas pelas restrições
+do drone, o algoritmo permanece eficiente o suficiente para demonstração.
 
 ---
 
 ## 📄 Formato do CSV
 
-O arquivo `entregas.csv` deve seguir o formato abaixo (com cabeçalho):
+O arquivo `entregas.csv` contém **20 entregas** e segue o formato:
 
 ```
 id,peso,prioridade,recompensa,bateria,tempo,distancia
 1,2.0,1,100.0,20.0,30.0,5.0
 2,3.5,2,150.0,40.0,50.0,10.0
+...
 ```
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | inteiro | Identificador único da entrega |
+| peso | decimal | Peso do pacote em kg |
+| prioridade | inteiro | Nível de prioridade (1=baixa, 2=média, 3=alta) |
+| recompensa | decimal | Valor ganho ao completar a entrega |
+| bateria | decimal | Consumo de bateria em % |
+| tempo | decimal | Tempo estimado em minutos |
+| distancia | decimal | Distância do destino em km |
